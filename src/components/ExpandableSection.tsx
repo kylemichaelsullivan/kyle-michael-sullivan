@@ -1,5 +1,7 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { memo } from 'react';
+
+import ChevronDownIcon from './icons/ChevronDownIcon';
+import { clsx } from 'clsx';
 
 type ExpandableSectionProps = {
 	title: string;
@@ -8,12 +10,7 @@ type ExpandableSectionProps = {
 	onToggle: () => void;
 };
 
-export default function ExpandableSection({
-	title,
-	items,
-	isExpanded,
-	onToggle,
-}: ExpandableSectionProps) {
+function ExpandableSection({ title, items, isExpanded, onToggle }: ExpandableSectionProps) {
 	return (
 		<div className='w-full mx-auto'>
 			<h3
@@ -22,15 +19,13 @@ export default function ExpandableSection({
 				onClick={onToggle}
 			>
 				<span>{title}</span>
-				<FontAwesomeIcon
-					className='transition-transform duration-300'
-					icon={faChevronDown}
-					style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+				<ChevronDownIcon
+					className={clsx('w-6 h-6 transition-transform duration-300', isExpanded && 'rotate-180')}
 				/>
 			</h3>
 			<div
-				className='grid overflow-hidden transition-all duration-300'
-				style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
+				className='expandable-content grid overflow-hidden transition-all duration-300'
+				data-expanded={isExpanded}
 			>
 				<ul className='list-disc overflow-hidden pl-8'>
 					{items.map(item => (
@@ -41,3 +36,5 @@ export default function ExpandableSection({
 		</div>
 	);
 }
+
+export default memo(ExpandableSection);

@@ -1,4 +1,4 @@
-import { ExperienceData } from '../data';
+import { ExperienceData } from '../data/experience';
 
 export default function Experience() {
 	return (

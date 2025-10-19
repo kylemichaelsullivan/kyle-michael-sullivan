@@ -1,17 +1,12 @@
+import { memo } from 'react';
+
 import type { Sample } from '../types';
 
 type SampleProps = Sample & {
 	index: number;
 };
 
-export default function Sample({
-	imagePng,
-	imageWebp,
-	index,
-	interactive,
-	source,
-	title,
-}: SampleProps) {
+function Sample({ imagePng, imageWebp, index, interactive, source, title }: SampleProps) {
 	return (
 		<div className='flex flex-col gap-2' key={`${title}-${index}`}>
 			{imagePng ?
@@ -27,7 +22,9 @@ export default function Sample({
 						<img
 							src={imagePng}
 							className='border border-gray-300 shadow-md w-full h-auto max-w-3xl transition-shadow hover:shadow-lg'
-							loading='lazy'
+							loading={index === 0 ? 'eager' : 'lazy'}
+							fetchPriority={index === 0 ? 'high' : undefined}
+							decoding='async'
 							alt={`Screenshot of ${title}`}
 						/>
 					</picture>
@@ -44,6 +41,7 @@ export default function Sample({
 				{interactive && (
 					<a
 						href={interactive}
+						className='button'
 						target='_blank'
 						title={`Interactive Version of ${title}`}
 						rel='noopener noreferrer'
@@ -53,6 +51,7 @@ export default function Sample({
 				)}
 				<a
 					href={source}
+					className='button'
 					target='_blank'
 					title={`Source Code for ${title}`}
 					rel='noopener noreferrer'
@@ -63,3 +62,5 @@ export default function Sample({
 		</div>
 	);
 }
+
+export default memo(Sample);

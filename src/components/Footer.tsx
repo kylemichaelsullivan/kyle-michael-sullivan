@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import ArrowUpIcon from './icons/ArrowUpIcon';
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear();
@@ -18,7 +17,7 @@ export default function Footer() {
 			</p>
 
 			<button type='button' className='button' title='To Top' onClick={scrollToTop}>
-				Top <FontAwesomeIcon icon={faArrowUp} />
+				Top <ArrowUpIcon className='inline-block w-4 h-4 ml-1' />
 			</button>
 		</footer>
 	);

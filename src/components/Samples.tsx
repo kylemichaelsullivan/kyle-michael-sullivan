@@ -1,4 +1,4 @@
-import { SampleData } from '../data';
+import { SampleData } from '../data/samples';
 import Sample from './Sample';
 
 export default function Samples() {

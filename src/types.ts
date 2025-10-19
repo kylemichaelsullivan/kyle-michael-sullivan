@@ -1,5 +1,3 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-
 export type Education = {
 	degree: string;
 	school: string;
@@ -18,7 +16,7 @@ export type Experience = {
 export type Link = {
 	label: string;
 	href: string;
-	icon?: IconDefinition;
+	icon?: 'github' | 'linkedin';
 };
 
 export type Sample = {

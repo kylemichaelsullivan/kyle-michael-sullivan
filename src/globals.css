@@ -111,3 +111,12 @@ a {
 		color: var(--palette-accent);
 	}
 }
+
+/* Expandable Section */
+.expandable-content {
+	grid-template-rows: 0fr;
+}
+
+.expandable-content[data-expanded='true'] {
+	grid-template-rows: 1fr;
+}

@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import ExpandableSection from './ExpandableSection';
-import { SkillsData } from '../data';
+import { SkillsData } from '../data/skills';
 
 export default function Skills() {
 	const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
-	const toggleSection = (title: string) => {
+	const toggleSection = useCallback((title: string) => {
 		setExpandedSections(prev => {
 			const newSet = new Set(prev);
 			if (newSet.has(title)) {
@@ -16,7 +16,7 @@ export default function Skills() {
 			}
 			return newSet;
 		});
-	};
+	}, []);
 
 	return (
 		<section className='Skills flex flex-col flex-nowrap gap-4 border-b p-4'>
@@ -24,8 +24,8 @@ export default function Skills() {
 			{Object.entries(SkillsData).map(([title, items]) => (
 				<ExpandableSection
 					isExpanded={expandedSections.has(title)}
-					title={title}
 					items={items}
+					title={title}
 					onToggle={() => toggleSection(title)}
 					key={title}
 				/>
