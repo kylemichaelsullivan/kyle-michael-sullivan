@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+:root {
+	--palette-primary: #d62828;
+	--palette-accent: #003049;
+	--palette-white: #ffffff;
+	--palette-black: #000000;
+}
+
+a {
+	text-decoration: none;
+	color: var(--palette-primary);
+	&:hover,
+	&:focus {
+		text-decoration: underline;
+	}
+}
+
+.button {
+	background-color: var(--palette-primary);
+	color: var(--palette-white);
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+	border: 1px solid var(--palette-primary);
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease;
+	&:hover,
+	&:focus {
+		background-color: var(--palette-accent);
+		color: var(--palette-white);
+		text-decoration: none;
+	}
+}
+
+/* Primary */
+.bg-primary {
+	background-color: var(--palette-primary);
+}
+
+.border-primary {
+	border-color: var(--palette-primary);
+}
+
+.text-primary {
+	color: var(--palette-primary);
+}
+
+.hover\:bg-primary {
+	&:hover,
+	&:focus {
+		background-color: var(--palette-primary);
+	}
+}
+
+.hover\:border-primary {
+	&:hover,
+	&:focus {
+		border-color: var(--palette-primary);
+	}
+}
+
+.hover\:text-primary {
+	&:hover,
+	&:focus {
+		color: var(--palette-primary);
+	}
+}
+
+/* Accent */
+.bg-accent {
+	background-color: var(--palette-accent);
+}
+
+.border-accent {
+	border-color: var(--palette-accent);
+}
+
+.text-accent {
+	color: var(--palette-accent);
+}
+
+.hover\:bg-accent {
+	&:hover,
+	&:focus {
+		background-color: var(--palette-accent);
+	}
+}
+
+.hover\:border-accent {
+	&:hover,
+	&:focus {
+		border-color: var(--palette-accent);
+	}
+}
+
+.hover\:text-accent {
+	&:hover,
+	&:focus {
+		color: var(--palette-accent);
+	}
+}
