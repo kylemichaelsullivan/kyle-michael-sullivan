@@ -25,7 +25,8 @@ export type Sample = {
 	title: string;
 	source: string;
 	interactive?: string;
-	image?: string;
+	imagePng?: string;
+	imageWebp?: string;
 };
 
 export type TextCategory = Record<string, string[]>;
