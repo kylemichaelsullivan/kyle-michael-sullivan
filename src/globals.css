@@ -112,6 +112,11 @@ a {
 	}
 }
 
+main > section {
+	max-width: 72rem;
+	margin: 0 auto;
+}
+
 /* Expandable Section */
 .expandable-content {
 	grid-template-rows: 0fr;
