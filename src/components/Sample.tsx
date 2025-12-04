@@ -21,7 +21,7 @@ function Sample({ imagePng, imageWebp, index, interactive, source, title }: Samp
 						{imageWebp && <source srcSet={imageWebp} type='image/webp' />}
 						<img
 							src={imagePng}
-							className='border border-gray-300 shadow-md w-full h-auto max-w-3xl transition-shadow hover:shadow-lg'
+							className='border border-gray-300 shadow-md w-full h-auto transition-shadow hover:shadow-lg'
 							loading={index === 0 ? 'eager' : 'lazy'}
 							fetchPriority={index === 0 ? 'high' : undefined}
 							decoding='async'
@@ -32,7 +32,7 @@ function Sample({ imagePng, imageWebp, index, interactive, source, title }: Samp
 			: interactive ?
 				<iframe
 					src={interactive}
-					className='border border-gray-300 shadow-md w-full h-96 max-w-3xl mx-auto'
+					className='border border-gray-300 shadow-md w-full h-96 mx-auto'
 					title={`Interactive demo of ${title}`}
 					loading='lazy'
 				/>
