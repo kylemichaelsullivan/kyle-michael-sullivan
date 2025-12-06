@@ -56,6 +56,7 @@ a {
 }
 
 .button {
+	cursor: pointer;
 	background-color: var(--palette-primary);
 	color: var(--palette-white);
 	padding: 0.5rem 1rem;
