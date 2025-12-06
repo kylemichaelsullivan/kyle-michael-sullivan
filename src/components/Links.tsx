@@ -1,6 +1,6 @@
+import { LinksData } from '../data/links';
 import GitHubIcon from './icons/GitHubIcon';
 import LinkedInIcon from './icons/LinkedInIcon';
-import { LinksData } from '../data/links';
 
 const iconMap = {
 	github: GitHubIcon,
@@ -9,10 +9,10 @@ const iconMap = {
 
 export default function Links() {
 	return (
-		<section className='Links flex flex-col flex-nowrap gap-4 border-b p-4'>
+		<section className='Links flex flex-col flex-nowrap gap-4 border-b'>
 			<h2 className='text-center text-3xl font-bold'>Links</h2>
 			<div className='flex flex-row flex-wrap justify-center gap-4'>
-				{LinksData.map(({ href, icon, label }, index) => {
+				{LinksData.map(({ href, icon, label }) => {
 					const Icon = icon ? iconMap[icon] : null;
 					return (
 						<a
@@ -21,7 +21,7 @@ export default function Links() {
 							rel='noopener noreferrer'
 							target='_blank'
 							title={label}
-							key={`${label}-${index}`}
+							key={href}
 						>
 							{Icon && <Icon className='inline-block w-5 h-5 mr-2' />}
 							<span>{label}</span>

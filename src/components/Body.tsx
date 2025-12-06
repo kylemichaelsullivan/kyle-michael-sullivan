@@ -1,8 +1,8 @@
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 
-import Summary from './Summary';
-import Skills from './Skills';
 import Knowledge from './Knowledge';
+import Skills from './Skills';
+import Summary from './Summary';
 
 const Experience = lazy(() => import('./Experience'));
 const Education = lazy(() => import('./Education'));
@@ -11,7 +11,7 @@ const Samples = lazy(() => import('./Samples'));
 
 function LoadingSection() {
 	return (
-		<section className='flex justify-center items-center border-b p-4 h-32'>
+		<section className='flex justify-center items-center border-b h-32'>
 			<div className='text-accent text-lg'>Loading...</div>
 		</section>
 	);
@@ -19,7 +19,7 @@ function LoadingSection() {
 
 export default function Body() {
 	return (
-		<main className='Body p-4'>
+		<main className='Body'>
 			<Summary />
 			<Skills />
 			<Knowledge />

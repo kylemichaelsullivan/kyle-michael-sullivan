@@ -8,7 +8,7 @@ export default function Footer() {
 	};
 
 	return (
-		<footer className='Footer flex flex-col justify-between gap-1 items-center border-t border-black p-4 sm:flex-row'>
+		<footer className='Footer flex flex-col justify-between gap-1 items-center border-t border-black sm:flex-row'>
 			<p className='flex gap-1'>
 				{`© ${currentYear}`}
 				<a href='/' rel='home' title='Kyle Michael Sullivan'>
@@ -16,7 +16,12 @@ export default function Footer() {
 				</a>
 			</p>
 
-			<button type='button' className='button' title='To Top' onClick={scrollToTop}>
+			<button
+				type='button'
+				className='button'
+				title='To Top'
+				onClick={scrollToTop}
+			>
 				Top <ArrowUpIcon className='inline-block w-4 h-4 ml-1' />
 			</button>
 		</footer>

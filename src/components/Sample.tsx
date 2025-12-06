@@ -1,15 +1,22 @@
 import { memo } from 'react';
 
-import type { Sample } from '../types';
+import type { Sample as SampleType } from '../types';
 
-type SampleProps = Sample & {
+type SampleProps = SampleType & {
 	index: number;
 };
 
-function Sample({ imagePng, imageWebp, index, interactive, source, title }: SampleProps) {
+function Sample({
+	imagePng,
+	imageWebp,
+	index,
+	interactive,
+	source,
+	title,
+}: SampleProps) {
 	return (
 		<div className='flex flex-col gap-2' key={`${title}-${index}`}>
-			{imagePng ?
+			{imagePng ? (
 				<a
 					href={interactive || source}
 					className='cursor-pointer mx-auto'
@@ -29,14 +36,14 @@ function Sample({ imagePng, imageWebp, index, interactive, source, title }: Samp
 						/>
 					</picture>
 				</a>
-			: interactive ?
+			) : interactive ? (
 				<iframe
 					src={interactive}
 					className='border border-gray-300 shadow-md w-full h-96 mx-auto'
 					title={`Interactive demo of ${title}`}
 					loading='lazy'
 				/>
-			:	null}
+			) : null}
 			<div className='flex flex-wrap gap-4 justify-center'>
 				{interactive && (
 					<a

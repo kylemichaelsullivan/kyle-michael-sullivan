@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
-import ExpandableSection from './ExpandableSection';
 import { KnowledgeData } from '../data/knowledge';
+import ExpandableSection from './ExpandableSection';
 
 export default function Knowledge() {
 	const [expandedSections, setExpandedSections] = useState<Set<string>>(
@@ -9,7 +9,7 @@ export default function Knowledge() {
 	);
 
 	const toggleSection = useCallback((title: string) => {
-		setExpandedSections(prev => {
+		setExpandedSections((prev) => {
 			const newSet = new Set(prev);
 			if (newSet.has(title)) {
 				newSet.delete(title);
@@ -21,7 +21,7 @@ export default function Knowledge() {
 	}, []);
 
 	return (
-		<section className='Knowledge flex flex-col flex-nowrap gap-4 border-b p-4'>
+		<section className='Knowledge flex flex-col flex-nowrap gap-4 border-b'>
 			<h2 className='text-center text-3xl font-bold'>Knowledge</h2>
 			{Object.entries(KnowledgeData).map(([title, items]) => (
 				<ExpandableSection

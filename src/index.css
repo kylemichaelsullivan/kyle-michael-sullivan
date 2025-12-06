@@ -177,7 +177,3 @@ main > section {
 .expandable-content[data-expanded='true'] {
 	grid-template-rows: 1fr;
 }
-
-.ExpandableSection h3 {
-	text-shadow: 1px 1px 0 var(--palette-white);
-}
