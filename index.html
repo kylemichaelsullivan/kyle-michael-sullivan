@@ -17,17 +17,17 @@
 
 		<!-- Critical CSS for FCP -->
 		<style>
-			*,
-			:before,
-			:after {
-				box-sizing: border-box;
-				border: 0 solid;
-			}
+		*,
+		:before,
+		:after {
+			box-sizing: border-box;
+			border-color: transparent;
+		}
 			:root {
 				--palette-primary: #d62828;
 				--palette-accent: #003049;
-				--palette-white: #fff;
-				--palette-black: #000;
+				--palette-white: #ffffff;
+				--palette-black: #000000;
 				font-synthesis: none;
 				text-rendering: optimizeLegibility;
 				-webkit-font-smoothing: antialiased;
@@ -44,6 +44,9 @@
 					Helvetica Neue,
 					Arial,
 					sans-serif;
+			}
+			header, section, footer {
+				padding: 1rem;
 			}
 			body {
 				margin: 0;
@@ -71,9 +74,6 @@
 			}
 			.flex {
 				display: flex;
-			}
-			.p-4 {
-				padding: 1rem;
 			}
 			.Header {
 				flex-direction: column;
