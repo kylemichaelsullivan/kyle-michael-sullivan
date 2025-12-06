@@ -1,0 +1,380 @@
+---
+globs: **/*.tsx, **/*.ts
+exclude: **/__tests__/**, **/*.test.*, **/*.spec.*, **/data/**, **/*.css
+alwaysApply: false
+---
+
+# React Development Standards for Kyle Michael Sullivan Portfolio
+
+## Component Architecture
+
+### Single-Purpose Components
+
+- **One component per file**: Each file contains exactly one React component
+- **Bite-sized components**: Components should be focused and single-purpose (one thing == one component == one file)
+- **Descriptive naming**: Use PascalCase with descriptive names indicating visual purpose
+- **Component suffixes**: Use appropriate suffixes when needed (e.g., `Container`, `Panel`, `Button`, `Display`)
+
+### Component Guidelines
+
+- **TypeScript types**: Prefer `type` over `interface` for component props and data structures
+- **Default exports**: Export components as default exports using `export default`
+- **Import paths**: Use relative imports for component and data imports
+- **Props interface**: Define clear, typed props with descriptive names
+- **forwardRef usage**: Use `forwardRef` for components that need to expose DOM refs when needed
+
+### Performance Optimization
+
+#### React.memo Usage
+
+- **Memoization criteria**: Apply `memo` to components with stable props or frequent re-renders when performance is a concern
+- **Current status**: Not currently used extensively - apply only when needed for performance optimization
+- **When to use**: Use for components that receive stable props and render frequently
+
+#### Memoization Guidelines
+
+```typescript
+// ✅ Use memo when component has stable props and frequent re-renders
+import { memo } from 'react';
+
+type ExpandableSectionProps = {
+  title: string;
+  items: string[];
+  isExpanded: boolean;
+  onToggle: () => void;
+};
+
+function ExpandableSection({
+  title,
+  items,
+  isExpanded,
+  onToggle,
+}: ExpandableSectionProps) {
+  return (
+    <div>
+      <h3 onClick={onToggle}>{title}</h3>
+      {isExpanded && (
+        <ul>
+          {items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export default memo(ExpandableSection);
+```
+
+**When to use React.memo:**
+
+- **UI components with stable props**: Components that receive props that don't change often
+- **Display components**: Components that render frequently but with the same data
+- **Form components**: Form fields that don't change often
+
+**When NOT to use React.memo:**
+
+- **Layout components**: Header, Footer, Main (these rarely re-render)
+- **Components with frequently changing props**: Components that receive new props on every render
+- **Simple components**: Components that are already fast enough
+
+#### Performance Optimization Patterns
+
+```typescript
+// ✅ useCallback for event handlers with Set state management
+import { useCallback, useState } from 'react';
+
+function SkillsComponent() {
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set()
+  );
+
+  const toggleSection = useCallback((title: string) => {
+    setExpandedSections((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(title)) {
+        newSet.delete(title);
+      } else {
+        newSet.add(title);
+      }
+      return newSet;
+    });
+  }, []);
+
+  return (
+    <section>
+      {sections.map(({ title, items }) => (
+        <ExpandableSection
+          key={title}
+          title={title}
+          items={items}
+          isExpanded={expandedSections.has(title)}
+          onToggle={() => toggleSection(title)}
+        />
+      ))}
+    </section>
+  );
+}
+```
+
+```typescript
+// ✅ useMemo for expensive computations
+import { useMemo } from 'react';
+
+function SectionComponent({ data }: SectionProps) {
+  // Memoize expensive calculations
+  const processedData = useMemo(() => {
+    return data.map(item => expensiveCalculation(item));
+  }, [data]);
+
+  return <div>{/* render processed data */}</div>;
+}
+```
+
+#### Lazy Loading and Code Splitting
+
+```typescript
+// ✅ Use lazy loading for less critical sections
+import { Suspense, lazy } from 'react';
+
+const Experience = lazy(() => import('./Experience'));
+const Education = lazy(() => import('./Education'));
+
+function LoadingSection() {
+  return (
+    <section className='flex justify-center items-center border-b h-32'>
+      <div className='text-accent text-lg'>Loading...</div>
+    </section>
+  );
+}
+
+export default function Body() {
+  return (
+    <main>
+      <Summary />
+      <Suspense fallback={<LoadingSection />}>
+        <Experience />
+      </Suspense>
+      <Suspense fallback={<LoadingSection />}>
+        <Education />
+      </Suspense>
+    </main>
+  );
+}
+```
+
+### Performance Considerations
+
+#### Memoization
+
+- **React.memo**: Use for components with stable props when performance is a concern
+- **useMemo**: Use for expensive computations (e.g., data processing, filtering)
+- **useCallback**: Use for event handlers passed as props to memoized children
+
+### Bundle Optimization
+
+- **Tree shaking**: Import only necessary components and utilities
+- **Dynamic imports**: Use for large components when appropriate
+- **Code splitting**: Leverage Vite's automatic code splitting
+
+## State Management
+
+### Local State
+
+- **useState**: Use for component-local state
+- **State lifting**: Lift state up when multiple components need access
+- **State organization**: Keep state as close to where it's used as possible
+
+#### State Guidelines
+
+```typescript
+// ✅ Use useState for local component state
+import { useState } from 'react';
+
+function ComponentWithState() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <div>
+      <button onClick={toggle}>Toggle</button>
+      {isExpanded && <div>Content</div>}
+    </div>
+  );
+}
+```
+
+### Data Management
+
+- **Data-driven**: Use centralized data files in `src/data/` for structured content
+- **Type safety**: Define TypeScript types for data structures
+- **Data imports**: Import data from `../data/` relative to component location
+
+#### Data Usage
+
+```typescript
+// ✅ Import data from data directory
+import { SkillsData } from '../data/skills';
+import { ExperienceData } from '../data/experience';
+
+// Use data in components
+{Object.entries(SkillsData).map(([title, items]) => (
+  <Component key={title} title={title} items={items} />
+))}
+```
+
+## Accessibility Standards
+
+### ARIA and Semantics
+
+- **Proper ARIA labels**: Include appropriate ARIA labels and roles
+- **Keyboard navigation**: Support keyboard navigation with proper tabIndex
+- **Focus management**: Implement proper focus management
+- **Screen reader compatibility**: Ensure screen reader compatibility
+- **Color contrast**: Maintain proper color contrast ratios
+- **Semantic HTML**: Use semantic HTML structure (header, main, footer, nav, etc.)
+
+### Error Handling
+
+- **Error message association**: Associate error messages with form fields when applicable
+- **Loading state announcements**: Announce loading states to screen readers when needed
+- **Error boundaries**: Implement error boundaries for graceful error handling when needed
+- **Defensive programming**: Include validation and fallbacks for data integrity
+
+## Kyle Michael Sullivan Portfolio-Specific Guidelines
+
+### Section Components
+
+All section components follow similar patterns:
+
+- **Summary**: Professional summary section
+- **Skills**: Skills section with expandable categories using ExpandableSection
+- **Knowledge**: Knowledge areas section with expandable categories
+- **Experience**: Work experience section (lazy loaded)
+- **Education**: Education section (lazy loaded)
+- **Links**: External links section (lazy loaded)
+- **Samples**: Portfolio samples/projects section (lazy loaded)
+
+### ExpandableSection Component
+
+- **Reusable pattern**: Used by Skills and Knowledge components for consistent expandable UI
+- **State management**: Parent components manage expanded state using Set<string>
+- **Memoization**: Component is wrapped with React.memo for performance
+- **Accessibility**: Includes proper title attributes and keyboard support
+
+### Layout Components
+
+- **Header**: Site header with name and title
+- **Body**: Main content area containing all section components with lazy loading
+- **Footer**: Site footer component
+
+### Lazy Loading
+
+- **Code splitting**: Experience, Education, Links, and Samples are lazy loaded
+- **Suspense boundaries**: Each lazy component is wrapped in Suspense with LoadingSection fallback
+- **Performance**: Reduces initial bundle size by splitting less critical sections
+
+### Typography
+
+- **Typographic apostrophe**: Use ' instead of ' in all user-facing text
+- **CSS variables**: Typography uses CSS variables defined in index.css
+- **Tailwind classes**: Use Tailwind typography utilities for consistent styling
+
+### Icons
+
+- **Custom SVG components**: Use custom React components for icons in `src/components/icons/`
+- **Icon components**: Icons are React components (e.g., ChevronDownIcon, ArrowUpIcon, GitHubIcon, LinkedInIcon)
+- **Icon accessibility**: Include appropriate aria attributes when needed
+
+### Styling
+
+- **Tailwind CSS**: Use Tailwind utility classes for styling (v4 with Vite plugin)
+- **Custom CSS**: Use custom CSS classes for complex or reusable patterns (expandable-content, etc.)
+- **CSS variables**: Use CSS variables for colors and fonts defined in index.css
+- **Responsive design**: Use Tailwind responsive prefixes (sm:, md:, lg:, xl:)
+- **clsx utility**: Use `clsx` for conditional class names
+
+## File Organization
+
+### Component Structure
+
+```
+src/components/
+├── Body.tsx              # Main content area with all sections
+├── Header.tsx            # Site header with name and title
+├── Footer.tsx            # Site footer
+├── Summary.tsx           # Professional summary section
+├── Skills.tsx            # Skills section with expandable categories
+├── Knowledge.tsx         # Knowledge areas section
+├── Experience.tsx        # Work experience section (lazy loaded)
+├── Education.tsx         # Education section (lazy loaded)
+├── Links.tsx             # External links section (lazy loaded)
+├── Samples.tsx          # Portfolio samples section (lazy loaded)
+├── Sample.tsx            # Individual sample component
+├── ExpandableSection.tsx # Reusable expandable section component
+└── icons/                # Icon components
+    ├── ArrowUpIcon.tsx
+    ├── ChevronDownIcon.tsx
+    ├── GitHubIcon.tsx
+    └── LinkedInIcon.tsx
+```
+
+### Data Structure
+
+```
+src/data/
+├── skills.ts             # Skills data
+├── knowledge.ts          # Knowledge areas data
+├── experience.ts         # Work experience data
+├── education.ts          # Education data
+├── links.ts              # External links data
+└── samples.ts            # Portfolio samples data
+```
+
+### Entry Point
+
+```
+src/
+├── main.tsx              # Application entry point
+├── index.css             # Global styles and CSS variables
+├── types.ts              # TypeScript type definitions
+└── assets/               # Static assets (images)
+    └── *.png, *.webp     # Portfolio sample images
+```
+
+## Development Workflow
+
+### Scripts
+
+- **`bun dev`**: Start development server with HMR
+- **`bun build`**: Build for production (TypeScript check + Vite build)
+- **`bun lint`**: Run Biome linter
+- **`bun lint:fix`**: Run Biome linter and auto-fix
+- **`bun format`**: Format code with Biome
+- **`bun format:check`**: Check code format
+- **`bun check`**: Run Biome formatter + linter
+- **`bun check:write`**: Run Biome formatter + linter and auto-fix
+- **`bun preview`**: Preview production build
+
+### Code Quality
+
+- **TypeScript**: Strict type checking enabled
+- **Biome**: Code formatting, linting, and import organization (replaces ESLint + Prettier)
+- **Import organization**: Use relative imports for components and data
+- **Vite**: Build tool with React plugin and Tailwind CSS v4 integration
+
+### Performance Patterns
+
+- **Lazy loading**: Use `lazy()` and `Suspense` for code splitting less critical sections
+- **React.memo**: Use for components with stable props (e.g., ExpandableSection)
+- **useCallback**: Use for event handlers passed to memoized children
+- **State management**: Use `Set<string>` for managing multiple expandable section states
+
+### Testing
+
+- **Component testing**: Test components with React Testing Library when needed
+- **Accessibility testing**: Test accessibility features when needed

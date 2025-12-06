@@ -1,0 +1,268 @@
+---
+globs: **/*.tsx, **/*.ts, **/*.css
+exclude: **/__tests__/**, **/*.test.*, **/*.spec.*
+alwaysApply: false
+---
+
+# Styling Standards
+
+## Typography
+
+- **Apostrophes**: ALL user-facing text MUST use the typographic apostrophe ’ instead of the straight apostrophe '
+- **Consistency**: Maintain consistent typography throughout the application
+- **System fonts**: Uses system font stack for consistent cross-platform rendering
+- **CSS variables**: Typography and colors use CSS variables (--palette-primary, --palette-accent, --palette-white, --palette-black)
+
+## Tailwind CSS
+
+- **Color utilities**: Prefer color utility classes from index.css that use CSS Custom Properties
+- **Compelling reasons**: Only avoid color utilities when there's a compelling reason not to
+- **Direct strings**: Use direct strings for simple cases without conditionals
+- **No margins**: Avoid using Tailwind margin classes (`m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`)
+- **No space utilities**: Avoid using `space-x-*` or `space-y-*` utilities - they rely on margins
+- **Biome integration**: Use Biome for formatting and linting (includes automatic class sorting)
+- **Utility function**: Use `clsx()` for conditional classes
+
+### ClassName Patterns
+
+```tsx
+// Component name should be first in className for debugging
+className='ComponentName bg-white rounded-lg border p-4'
+
+// Conditional cases - use clsx
+className={clsx(
+  'ComponentName base-classes',
+  isActive && 'active-classes',
+  isDisabled && 'disabled-classes',
+  className
+)}
+
+// Component props - use clsx
+className={clsx('ComponentName base-classes', className)}
+```
+
+### JSX Attribute Order
+
+Follow this specific order for JSX attributes:
+
+1. **type** - Element type (for form elements)
+2. **className** - CSS classes
+3. **Standard HTML attributes** - (alphabetically)
+4. **Event handlers** - (alphabetically, starting with 'on')
+5. **ARIA attributes** - (alphabetically)
+6. **Custom data attributes** - (alphabetically)
+7. **ref** - React ref (penultimate)
+8. **id** - Element identifier (always last)
+
+#### JSX Attribute Order Example
+
+```tsx
+<button
+	type='button'
+	className='Button rounded-lg border bg-white p-4'
+	disabled={isDisabled}
+	title='Submit form'
+	onClick={handleClick}
+	onKeyDown={handleKeyDown}
+	aria-label='Submit form'
+	aria-describedby='submit-help'
+	data-testid='submit-button'
+	ref={buttonRef}
+	id='submit-button'
+>
+	Submit
+</button>
+```
+
+### Layout Principles
+
+- **Flexbox/Grid**: Use Flexbox and Grid for layouts
+- **Avoid margins**: Don't use CSS margins except for printing and where flex/grid won't work
+- **Avoid space- utilities**: Don't use `space-x-*` or `space-y-*` utilities - they rely on margins
+- **Use flex/gap**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **Consistent spacing**: Use Tailwind's spacing scale
+- **Theme variables**: Use CSS custom properties for theme colors
+
+### Spacing Patterns
+
+```tsx
+// Vertical spacing
+className = 'flex flex-col gap-2'; // Small gaps
+className = 'flex flex-col gap-4'; // Medium gaps
+className = 'flex flex-col gap-6'; // Large gaps
+
+// Horizontal spacing
+className = 'flex items-center gap-2';
+className = 'flex justify-between';
+
+// Responsive spacing
+className = 'flex flex-col gap-3 sm:gap-4';
+className = 'flex items-center gap-1.5 sm:gap-2';
+```
+
+### Component Structure
+
+- **Avoid superfluous wrappers**: Don't create unnecessary wrapper divs that add DOM complexity
+- **Simplify nesting**: Remove redundant wrapper elements when possible
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or organizational purposes
+
+#### Wrapper Removal Examples
+
+```tsx
+// ❌ Avoid - redundant wrapper
+<div className='flex flex-col gap-6'>
+  <div className='flex flex-col gap-6'>
+    <Component />
+  </div>
+</div>
+
+// ✅ Good - simplified structure
+<div className='flex flex-col gap-6'>
+  <Component />
+</div>
+```
+
+## Custom SVG Icons
+
+- **Icon components**: Use custom SVG icon components from `src/components/icons/`
+- **Component structure**: Icons are React components that return SVG elements
+- **Accessibility**: Always include `aria-hidden="true"` on decorative icons
+- **Icon props**: Icons accept `className` prop for styling and sizing
+- **Icon sizing**: Use className for icon sizing (e.g., `w-6 h-6`)
+- **Color inheritance**: Icons use `fill='currentColor'` to inherit text color
+- **Semantic meaning**: Choose icons that clearly represent their function
+- **Consistency**: Use similar icons for similar actions across the application
+
+#### Custom Icon Usage Example
+
+```tsx
+import ChevronDownIcon from './icons/ChevronDownIcon';
+
+<ChevronDownIcon
+  className={clsx(
+    'w-6 h-6 transition-transform duration-300',
+    isExpanded && 'rotate-180'
+  )}
+/>;
+```
+
+## CSS Variables and Custom Properties
+
+- **Color variables**: Use CSS variables for colors (--palette-primary, --palette-accent, --palette-white, --palette-black)
+- **Dark mode**: CSS variables automatically switch for dark mode via `prefers-color-scheme`
+- **Theme consistency**: Maintain consistent use of CSS variables throughout the application
+- **Utility classes**: Use Tailwind utility classes that reference CSS variables (e.g., `bg-primary`, `text-accent`)
+
+### CSS Variable Usage
+
+```css
+/* In index.css */
+:root {
+	--palette-primary: #d62828;
+	--palette-accent: #003049;
+	--palette-white: #ffffff;
+	--palette-black: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--palette-white: #000000;
+		--palette-black: #ffffff;
+	}
+}
+```
+
+```tsx
+// In components - use Tailwind utility classes that reference CSS variables
+<div className='bg-primary text-white'>
+	{/* or use custom CSS classes that reference variables */}
+</div>
+
+// Direct CSS variable usage when needed
+<div style={{ color: 'var(--palette-primary)' }}>
+	{/* Direct variable access */}
+</div>
+```
+
+## Custom CSS Patterns
+
+- **Expandable sections**: Custom CSS for expandable section component with grid-based animations
+- **Button styles**: Custom CSS for button component with hover states
+- **Component-specific**: Use custom CSS classes for complex or reusable patterns
+- **CSS organization**: Keep custom CSS in `index.css` organized by component/pattern
+
+### Custom CSS Examples
+
+```css
+/* Expandable section animation using CSS Grid */
+.expandable-content {
+	grid-template-rows: 0fr;
+}
+
+.expandable-content[data-expanded='true'] {
+	grid-template-rows: 1fr;
+}
+
+/* Button styles */
+.button {
+	background-color: var(--palette-primary);
+	color: var(--palette-white);
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+	border: 1px solid var(--palette-primary);
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button:hover,
+.button:focus {
+	background-color: var(--palette-accent);
+	color: var(--palette-white);
+	text-decoration: none;
+}
+```
+
+## SVG Assets
+
+- **Custom icon components**: Use custom React icon components from `src/components/icons/`
+- **SVG styling**: SVG colors can be controlled via `fill='currentColor'` to inherit text color
+- **Accessibility**: Include `aria-hidden='true'` on decorative icons, `aria-label` on meaningful icons
+- **Icon structure**: Icons are React components that return SVG elements with proper viewBox and paths
+
+#### SVG Icon Component Example
+
+```tsx
+// Icon component structure
+type IconProps = {
+	className?: string;
+};
+
+export default function ChevronDownIcon({ className }: IconProps) {
+	return (
+		<svg
+			xmlns='http://www.w3.org/2000/svg'
+			viewBox='0 0 512 512'
+			className={className}
+			aria-hidden='true'
+			fill='currentColor'
+		>
+			<path d='...' />
+		</svg>
+	);
+}
+
+// Usage
+import ChevronDownIcon from './icons/ChevronDownIcon';
+
+<ChevronDownIcon className='w-6 h-6' />;
+```
+
+## CSS Best Practices
+
+- **No !important**: Avoid using `!important` declarations in CSS
+- **TypeScript**: Avoid using the `any` type in TypeScript code
+- **Semantic HTML**: Use semantic HTML elements for better accessibility (header, main, footer, section, etc.)
+- **Responsive design**: Use Tailwind responsive prefixes (sm:, md:, lg:, xl:)
+- **Custom classes**: Use custom CSS classes for complex patterns that can't be achieved with utilities
+- **CSS organization**: Organize CSS by component/pattern, keep related styles together
+- **Dark mode**: Support dark mode via CSS variables and `prefers-color-scheme` media query
+- **Transitions**: Use CSS transitions for smooth state changes (e.g., expandable sections, hover states)

@@ -1,0 +1,365 @@
+---
+globs: **/components/**/*.tsx
+exclude: **/__tests__/**, **/*.test.*, **/*.spec.*
+alwaysApply: false
+---
+
+# Kyle Michael Sullivan Portfolio Component Development Standards
+
+## File Organization
+
+```
+src/components/
+├── Body.tsx              # Main content area with all sections
+├── Header.tsx            # Site header with name and title
+├── Footer.tsx            # Site footer
+├── Summary.tsx           # Summary section
+├── Skills.tsx            # Skills section with expandable sections
+├── Knowledge.tsx         # Knowledge section
+├── Experience.tsx        # Experience section
+├── Education.tsx         # Education section
+├── Links.tsx             # Links section
+├── Samples.tsx           # Portfolio samples section
+├── Sample.tsx            # Individual sample component
+├── ExpandableSection.tsx # Reusable expandable section component
+└── icons/
+    ├── ArrowUpIcon.tsx   # Arrow up icon component
+    ├── ChevronDownIcon.tsx # Chevron down icon component
+    ├── GitHubIcon.tsx    # GitHub icon component
+    └── LinkedInIcon.tsx  # LinkedIn icon component
+
+src/data/
+├── education.ts          # Education data
+├── experience.ts         # Experience data
+├── knowledge.ts          # Knowledge data
+├── links.ts              # Links data
+├── samples.ts            # Portfolio samples data
+└── skills.ts             # Skills data
+```
+
+## Component Structure Guidelines
+
+### Avoid Superfluous Wrappers
+
+- **Remove unnecessary wrapper divs**: Don't create wrapper divs that add DOM complexity without benefit
+- **Simplify component structure**: Remove redundant nesting when possible
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or organizational purposes
+
+### Spacing Guidelines
+
+- **Avoid `space-*` utilities**: Don't use `space-x-*` or `space-y-*` utilities - they rely on margin-based spacing
+- **Use flex/gap spacing**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **Maintain visual consistency**: All spacing changes should preserve the original visual appearance
+
+#### Spacing Examples
+
+```tsx
+// ❌ Avoid - margin-based spacing
+<div className='space-y-4'>
+  <Component />
+</div>
+
+// ✅ Good - flexbox-based spacing
+<div className='flex flex-col gap-4'>
+  <Component />
+</div>
+```
+
+```tsx
+// ❌ Avoid - redundant wrapper
+<div className='Container'>
+  <div className='flex flex-col gap-4'>
+    <Component />
+  </div>
+</div>
+
+// ✅ Good - simplified structure
+<div className='Container flex flex-col gap-4'>
+  <Component />
+</div>
+```
+
+## Utility Components
+
+Always use the project's utility components instead of creating custom HTML elements when possible:
+
+### Core UI Components
+
+- **ExpandableSection** (`@/components/ExpandableSection`) - Reusable expandable section component for collapsible content
+  - Required props: `title` (string), `items` (string[]), `isExpanded` (boolean), `onToggle` (() => void)
+  - Uses custom ChevronDownIcon for expand/collapse indicator
+  - Supports controlled state management
+
+#### Example Usage
+
+```tsx
+// ✅ Use ExpandableSection component
+import ExpandableSection from '@/components/ExpandableSection';
+
+const [expanded, setExpanded] = useState(false);
+
+<ExpandableSection
+  title='Skills'
+  items={['React', 'TypeScript', 'Node.js']}
+  isExpanded={expanded}
+  onToggle={() => setExpanded(!expanded)}
+/>
+
+// ❌ Don't create custom expandable when utility exists
+<div className='custom-expandable'>
+  <button onClick={toggle}>Skills</button>
+  {isOpen && <div>Content</div>}
+</div>
+```
+
+## Component Guidelines
+
+### Single-Purpose Components
+
+- **One component per file**: Each file contains exactly one React component
+- **Bite-sized components**: Components should be focused and single-purpose (one thing == one component == one file)
+- **Descriptive naming**: Use PascalCase with descriptive names indicating visual purpose
+- **Component suffixes**: Use appropriate suffixes when needed (e.g., `Container`, `Panel`, `Button`, `Display`)
+
+### Component Structure
+
+```tsx
+// Pattern 1: Function component with default export (most common)
+import clsx from 'clsx';
+
+import type { ReactNode } from 'react';
+
+type ComponentProps = {
+	title: string;
+	variant?: 'primary' | 'secondary';
+	children?: ReactNode;
+};
+
+function ComponentName({
+	title,
+	variant = 'primary',
+	children,
+}: ComponentProps) {
+	return (
+		<div
+			className={clsx(
+				'ComponentName base-classes',
+				variant === 'secondary' && 'secondary-classes',
+			)}
+		>
+			{children}
+		</div>
+	);
+}
+
+export default ComponentName;
+
+// Pattern 2: forwardRef component with default export (for DOM refs)
+import { forwardRef } from 'react';
+
+const ComponentName = forwardRef<HTMLDivElement, ComponentProps>(
+	({ title, variant = 'primary', children }, ref) => {
+		return (
+			<div
+				ref={ref}
+				className={clsx(
+					'ComponentName base-classes',
+					variant === 'secondary' && 'secondary-classes',
+				)}
+			>
+				{children}
+			</div>
+		);
+	},
+);
+
+ComponentName.displayName = 'ComponentName';
+
+export default ComponentName;
+
+// Pattern 3: Memoized component (for performance optimization)
+import { memo } from 'react';
+
+function ComponentName({ title, variant = 'primary', children }: ComponentProps) {
+	return (
+		<div
+			className={clsx(
+				'ComponentName base-classes',
+				variant === 'secondary' && 'secondary-classes',
+			)}
+		>
+			{children}
+		</div>
+	);
+}
+
+export default memo(ComponentName);
+```
+
+### Component Guidelines
+
+- **TypeScript types**: Prefer `type` over `interface` for component props and data structures
+- **Default exports**: Export components as default exports using `export default`
+- **Import paths**: Use `@/components/` alias for component imports
+- **Props interface**: Define clear, typed props with descriptive names
+- **forwardRef usage**: Use `forwardRef` for components that need to expose DOM refs
+- **Memoization**: Use `memo` for components with stable props to prevent unnecessary re-renders
+
+## Component Patterns
+
+### Layout Components
+
+- **Body** (`@/components/Body`) - Main content area containing all section components with lazy loading
+- **Header** (`@/components/Header`) - Site header with name and professional title
+- **Footer** (`@/components/Footer`) - Site footer
+
+### Section Components
+
+All section components follow a similar pattern:
+
+- **Summary** (`@/components/Summary`) - Professional summary section
+- **Skills** (`@/components/Skills`) - Skills section with expandable subsections
+- **Knowledge** (`@/components/Knowledge`) - Knowledge section
+- **Experience** (`@/components/Experience`) - Work experience section
+- **Education** (`@/components/Education`) - Education section
+- **Links** (`@/components/Links`) - External links section
+- **Samples** (`@/components/Samples`) - Portfolio samples section
+
+### Utility Components
+
+- **ExpandableSection** (`@/components/ExpandableSection`) - Reusable expandable section with controlled state
+- **Sample** (`@/components/Sample`) - Individual portfolio sample component with image and links
+- **Icons** (`@/components/icons/*`) - Custom SVG icon components
+
+## Data Management
+
+The project uses a data-driven approach with TypeScript types:
+
+### Data Structure
+
+- **Data files** (`@/data/*`) - TypeScript files exporting typed data arrays/objects
+- **Types** (`@/types`) - TypeScript type definitions for data structures
+- **Type safety**: All data is typed and validated at compile time
+
+### Using Data
+
+```tsx
+import { ExperienceData } from '@/data/experience';
+import type { Sample } from '@/types';
+
+// Access typed data
+ExperienceData.map(({ company, dates, items, location, title }, index) => (
+  // Component JSX
+));
+```
+
+## Component Best Practices
+
+### Performance
+
+- **React.memo**: Use for components with stable props when needed (e.g., Sample component)
+- **useMemo**: Use for expensive computations
+- **useCallback**: Use for event handlers passed as props (e.g., toggleSection in Skills)
+- **Lazy loading**: Use `lazy()` and `Suspense` for code splitting (e.g., Experience, Education, Links, Samples)
+- **Tree shaking**: Import only necessary components
+
+### Accessibility
+
+- **ARIA labels**: Include appropriate ARIA labels and roles
+- **Keyboard navigation**: Support keyboard navigation for interactive elements
+- **Focus management**: Implement proper focus management
+- **Screen reader compatibility**: Ensure screen reader compatibility
+- **Color contrast**: Maintain proper color contrast ratios
+- **Semantic HTML**: Use semantic HTML structure (header, main, footer, nav, section, etc.)
+- **Image alt text**: Always provide descriptive alt text for images
+- **Link titles**: Include descriptive title attributes for links
+
+### Error Handling
+
+- **Defensive programming**: Include validation and fallbacks for data integrity
+- **Graceful degradation**: Handle missing data values gracefully
+- **Null checks**: Check for null/undefined values before rendering
+
+### SVG Icons
+
+- **Custom icon components**: Use custom SVG icon components from `@/components/icons/`
+- **Icon accessibility**: Include `aria-hidden='true'` for decorative icons
+- **Icon sizing**: Use className for icon sizing and styling
+
+## Styling Guidelines
+
+### Tailwind CSS
+
+- **Utility-first**: Use Tailwind utility classes for styling
+- **Custom classes**: Use custom CSS classes for complex or reusable patterns
+- **Responsive design**: Use Tailwind responsive prefixes (sm:, md:, lg:, xl:)
+- **Dark mode**: Support dark mode if configured in Tailwind config
+
+### Class Management
+
+- **clsx**: Use `clsx` for conditional class names
+- **Component classes**: Include component name as base class for scoping
+
+```tsx
+import clsx from 'clsx';
+
+<div
+  className={clsx(
+    'ComponentName base-classes',
+    condition && 'conditional-classes',
+    variant === 'primary' && 'primary-classes',
+  )}
+>
+```
+
+## Typography
+
+- **Typographic apostrophe**: Use ' instead of ' in all user-facing text
+- **Font imports**: Use Tailwind font utilities for typography
+- **Responsive typography**: Use responsive text size utilities (text-2xl, text-3xl, etc.)
+
+## Image Optimization
+
+- **WebP format**: Prefer WebP images with PNG fallback using `<picture>` element
+- **Lazy loading**: Use `loading='lazy'` for images below the fold
+- **Fetch priority**: Use `fetchPriority='high'` for above-the-fold images
+- **Async decoding**: Use `decoding='async'` for better performance
+
+```tsx
+<picture>
+  {imageWebp && <source srcSet={imageWebp} type='image/webp' />}
+  <img
+    src={imagePng}
+    className='border border-gray-300 shadow-md w-full h-auto'
+    loading={index === 0 ? 'eager' : 'lazy'}
+    fetchPriority={index === 0 ? 'high' : undefined}
+    decoding='async'
+    alt={`Screenshot of ${title}`}
+  />
+</picture>
+```
+
+## Component Testing
+
+### Unit Testing
+
+- **Component rendering**: Test component rendering with different props
+- **User interactions**: Test user interactions and callbacks
+- **Accessibility features**: Test accessibility features
+- **Data integration**: Test components with different data values
+
+### Integration Testing
+
+- **Section integration**: Test section components within Body
+- **ExpandableSection behavior**: Test expandable section open/close functionality
+- **Responsive behavior**: Test responsive behavior across screen sizes
+- **Lazy loading**: Test lazy loading and Suspense fallbacks
+
+### Testing Commands
+
+- Use `npm run dev` for development server
+- Use `npm run build` for production build
+- Use `npm run lint` for linting
+- Use `npm run lint:fix` for auto-fixing lint issues
+- Use `npm run format` for formatting code
+- Use `npm run preview` for previewing production build

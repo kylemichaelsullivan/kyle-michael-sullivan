@@ -1,0 +1,280 @@
+---
+alwaysApply: true
+---
+
+# Kyle Michael Sullivan Portfolio Project Rules
+
+## Core Principles
+
+- Write and review code like a senior developer
+- Challenge erroneous assumptions and inefficiencies
+- Use **Bun** for package management
+- Prefer `bun build` over `bun dev` for compilation
+- Use **TypeScript** with strict configuration
+- Follow **React 19** with **Vite** architecture
+- Use typographic apostrophe ' instead of straight apostrophe ' in ALL user-facing text
+
+## Package Management
+
+- **Package Manager**: Bun
+- **Build Command**: `bun build` (TypeScript compilation + Vite build)
+- **Development Command**: `bun dev` (Vite dev server with HMR)
+- **Lock File**: `bun.lock`
+
+## Development Scripts
+
+### Development Commands
+
+- **Development Server**: `bun dev` (Vite dev server with HMR)
+- **Production Build**: `bun build` (TypeScript compilation + Vite build)
+- **Preview Build**: `bun preview` (Preview production build locally)
+- **Linting**: `bun lint` (Run Biome linter)
+- **Lint Fix**: `bun lint:fix` (Run Biome linter and auto-fix)
+- **Formatting**: `bun format` (Format code with Biome)
+- **Format Check**: `bun format:check` (Check code format)
+- **Check All**: `bun check` (Run Biome formatter + linter)
+- **Check All Fix**: `bun check:write` (Run Biome formatter + linter and auto-fix)
+
+### Vite Benefits
+
+- **Fast HMR**: Hot Module Replacement for instant updates
+- **Optimized builds**: Production builds with code splitting
+- **TypeScript support**: Native TypeScript support
+- **Plugin ecosystem**: Rich plugin ecosystem (React, Tailwind, SVGR)
+
+## Project Structure
+
+```
+src/
+├── assets/              # Static assets (images, webp files)
+│   ├── *.png            # PNG image files
+│   └── *.webp           # WebP image files
+├── components/          # React components
+│   ├── Body.tsx         # Main content area with sections
+│   ├── Header.tsx       # Site header
+│   ├── Footer.tsx       # Site footer
+│   ├── Summary.tsx      # Summary/intro section
+│   ├── Skills.tsx       # Skills section
+│   ├── Knowledge.tsx    # Knowledge section
+│   ├── Experience.tsx   # Work experience section
+│   ├── Education.tsx    # Education section
+│   ├── Links.tsx        # External links section
+│   ├── Samples.tsx      # Portfolio samples section
+│   ├── Sample.tsx       # Individual sample component
+│   ├── ExpandableSection.tsx  # Reusable expandable section component
+│   └── icons/           # Custom icon components
+│       ├── ArrowUpIcon.tsx
+│       ├── ChevronDownIcon.tsx
+│       ├── GitHubIcon.tsx
+│       └── LinkedInIcon.tsx
+├── data/                # Data files
+│   ├── education.ts     # Education data
+│   ├── experience.ts    # Work experience data
+│   ├── knowledge.ts     # Knowledge data
+│   ├── links.ts         # External links data
+│   ├── samples.ts       # Portfolio samples data
+│   └── skills.ts        # Skills data
+├── main.tsx             # Application entry point
+├── types.ts             # TypeScript type definitions
+└── index.css            # Global styles and CSS variables
+```
+
+## Code Organization
+
+### Import Organization
+
+- **Defined order**: Follow specific import order, then alphabetize within each group
+- **Import order**:
+  1. React imports (from 'react')
+  2. Third-party libraries (alphabetically by source)
+  3. Internal project imports (alphabetically by path)
+  4. Type imports (alphabetically by path)
+- **Avoid React namespace**: Import React types directly, avoid `React.` prefix
+- **Named imports**: Use named imports for better tree-shaking
+
+#### Import Order Example
+
+```tsx
+// 1. React imports
+import { useCallback, useState } from 'react';
+
+// 2. Third-party libraries (alphabetically by source)
+import clsx from 'clsx';
+
+// 3. Internal project imports (alphabetically by path)
+import { SkillsData } from '../data/skills';
+import ExpandableSection from './ExpandableSection';
+
+// 4. React type imports (alphabetically by path)
+import type { ReactNode } from 'react';
+
+// 5. Type imports (alphabetically by path)
+import type { ComponentProps } from '@/types';
+```
+
+### File Structure
+
+```tsx
+// Standard component file structure
+import { useCallback, useState } from 'react';
+
+import { SkillsData } from '../data/skills';
+import ExpandableSection from './ExpandableSection';
+
+// Default export pattern (current working pattern)
+export default function ComponentName() {
+	const [expandedSections, setExpandedSections] = useState<Set<string>>(
+		new Set()
+	);
+
+	const toggleSection = useCallback((title: string) => {
+		setExpandedSections((prev) => {
+			const newSet = new Set(prev);
+			if (newSet.has(title)) {
+				newSet.delete(title);
+			} else {
+				newSet.add(title);
+			}
+			return newSet;
+		});
+	}, []);
+
+	return (
+		<section className='ComponentName flex flex-col flex-nowrap gap-4 border-b'>
+			{/* Component content */}
+		</section>
+	);
+}
+
+// Alternative: Simple component with props
+type ComponentProps = {
+	// Required props
+	title: string;
+	// Optional props with defaults
+	variant?: 'primary' | 'secondary';
+	size?: 'sm' | 'md' | 'lg';
+	disabled?: boolean;
+	// Children
+	children?: ReactNode;
+};
+
+export default function ComponentName({
+	title,
+	items,
+	isExpanded = false,
+	onToggle,
+}: ComponentProps) {
+	return (
+		<div className='ComponentName'>
+			{/* Component content */}
+		</div>
+	);
+}
+```
+
+## Styling Guidelines
+
+### CSS and Styling
+
+- **Avoid Tailwind margin/space classes**: Do not use `space-x-*` or `space-y-*` utilities - use flex/gap instead
+- **Use flex/gap spacing**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **No !important declarations**: Avoid using `!important` in CSS
+- **CSS variables**: Use CSS variables for colors and fonts (defined in index.css)
+- **Tailwind utilities**: Use Tailwind utility classes for styling
+- **Custom CSS**: Use custom CSS classes for complex or reusable patterns (accordion, metronome, etc.)
+
+### Spacing Examples
+
+```tsx
+// ❌ Avoid - margin-based spacing
+<div className='space-y-4'>
+  <Component />
+</div>
+
+// ✅ Good - flexbox-based spacing
+<div className='flex flex-col gap-4'>
+  <Component />
+</div>
+```
+
+### React Best Practices
+
+- **TypeScript**: Avoid using `any` type, prefer proper typing
+- **Component optimization**: Use `lazy` and `Suspense` for code splitting when appropriate
+- **Default exports**: Use default exports for components
+- **Relative imports**: Use relative imports for components and data files
+- **State management**: Use `useState` and `useCallback` for local component state
+
+## Data Management
+
+### Data Guidelines
+
+- **Data files**: All static data is stored in `src/data/` directory
+- **Type safety**: Data uses TypeScript types for compile-time safety
+- **Data structure**: Each data file exports typed data structures
+- **Data access**: Import data directly from data files
+
+### Data Usage
+
+```tsx
+// ✅ Import and use data
+import { SkillsData } from '../data/skills';
+import { ExperienceData } from '../data/experience';
+
+// Use data in components
+{Object.entries(SkillsData).map(([title, items]) => (
+	<ExpandableSection
+		items={items}
+		title={title}
+		key={title}
+	/>
+))}
+```
+
+## Icons and Assets
+
+### Icon Guidelines
+
+- **Custom icon components**: Use custom icon components from `src/components/icons/`
+- **Icon accessibility**: Include `aria-hidden='true'` for decorative icons
+- **Icon structure**: Icons are React components that return SVG elements
+
+### Asset Guidelines
+
+- **Image assets**: Place images in `src/assets/` directory
+- **Public assets**: Place static assets (favicon, logos) in `public/` directory
+- **Asset formats**: Use WebP format for images when possible, with PNG fallbacks
+- **Asset organization**: Keep assets organized by type and purpose
+
+## Comments and Documentation
+
+### Comment Guidelines
+
+- **Minimal comments**: Limit comments to non-obvious functionality
+- **Purpose comments**: Comment on oddities that have non-obvious purposes
+- **Self-documenting code**: Write code that explains itself through clear naming and structure
+- **JSDoc**: Use JSDoc comments for complex props and functions
+
+## Communication Standards
+
+### Progress Updates
+
+- **Meaningful updates only**: Avoid inane progress updates and status reports
+- **Focus on substance**: Communicate actual progress, blockers, or decisions that matter
+- **No busy work updates**: Don't report on routine tasks or obvious progress
+- **Context matters**: Provide context when updates are necessary
+- **Efficiency**: Respect time by being concise and relevant
+
+### Documentation Standards
+
+- **Documentation directory**: Place all MD documentation in appropriate directories
+- **Usage examples**: Provide clear usage examples
+- **Props documentation**: Document all props with types and descriptions
+- **Data structure documentation**: Document data file structure and usage
+
+### Documentation Updates
+
+- **Substantive changes only**: Update documentation for meaningful changes
+- **Avoid trivial updates**: Don't update docs for minor formatting or obvious changes
+- **Focus on value**: Document decisions, patterns, and changes that provide value
+- **Clear purpose**: Ensure documentation updates serve a clear purpose
