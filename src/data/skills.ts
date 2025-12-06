@@ -22,6 +22,7 @@ export const SkillsData: TextCategory = {
 	'Back-End Development': [
 		'.NET',
 		'APIs',
+		'Bun',
 		'C',
 		'C#',
 		'C++',
@@ -157,7 +158,14 @@ export const SkillsData: TextCategory = {
 		'Pair Programming',
 		'Tutoring',
 	],
-	'Operating Systems': ['Android', 'ChromeOS', 'iOS', 'Linux', 'macOS', 'Windows'],
+	'Operating Systems': [
+		'Android',
+		'ChromeOS',
+		'iOS',
+		'Linux',
+		'macOS',
+		'Windows',
+	],
 	Paradigms: [
 		'Functional Programming',
 		'Model View Controller (MVC)',
