@@ -4,7 +4,7 @@ export const ExperienceData: Experience[] = [
 	{
 		title: 'Lead Web Solutions Specialist',
 		company: 'Patriot Technology, Esquire',
-		dates: 'November 2022 - Present',
+		dates: 'September 2014 - Present',
 		location: 'Grand Rapids, MI',
 		items: [
 			'Developing custom web apps with React, Typescript, Tailwind CSS, NextJS and other industry-standard tools and practices.',
@@ -69,7 +69,7 @@ export const ExperienceData: Experience[] = [
 	{
 		title: 'Senior WordPress Developer',
 		company: 'Diocesan Publictions',
-		dates: 'September 2018 - September 2022',
+		dates: 'September 2018 - September 2021',
 		location: 'Byron Center, MI',
 		items: [
 			'Designed, developed, tested, launched and serviced hundreds of custom-built WordPress Themes & Plugins to satisfy client specifications.',
