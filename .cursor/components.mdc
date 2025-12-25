@@ -357,9 +357,8 @@ import clsx from 'clsx';
 
 ### Testing Commands
 
-- Use `npm run dev` for development server
-- Use `npm run build` for production build
-- Use `npm run lint` for linting
-- Use `npm run lint:fix` for auto-fixing lint issues
-- Use `npm run format` for formatting code
-- Use `npm run preview` for previewing production build
+- Use `bun dev` for development server
+- Use `bun run build` for production build
+- Use `bun lint` for linting
+- Use `bun lint:fix` for auto-fixing lint issues
+- Use `bun format` for formatting code
