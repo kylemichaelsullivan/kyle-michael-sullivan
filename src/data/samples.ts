@@ -46,7 +46,7 @@ export const SampleData: Sample[] = [
 	{
 		title: 'Bad Metronome',
 		source: 'https://github.com/kylemichaelsullivan/bad-metronome',
-		interactive: 'https://badmetronome.com/',
+		interactive: 'https://badmetronome.vercel.app/',
 		imagePng: badMetronomePng,
 		imageWebp: badMetronomeWebp,
 	},
